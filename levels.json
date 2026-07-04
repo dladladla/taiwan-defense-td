@@ -1,0 +1,154 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "name": "高雄港",
+      "description": "解放南台湾第一站，突破高雄港防线",
+      "startingGold": 250,
+      "startingHealth": 100,
+      "enemyWaves": 4,
+      "enemiesPerWave": 6,
+      "enemyTypes": ["infantry", "fast"],
+      "spawnInterval": 2800,
+      "reward": 60,
+      "map": {
+        "start": { "x": 0, "y": 2 },
+        "end": { "x": 23, "y": 13 },
+        "path": [
+          { "x": 0, "y": 2 },
+          { "x": 5, "y": 2 },
+          { "x": 5, "y": 11 },
+          { "x": 12, "y": 11 },
+          { "x": 12, "y": 4 },
+          { "x": 18, "y": 4 },
+          { "x": 18, "y": 13 },
+          { "x": 23, "y": 13 }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "台南城",
+      "description": "攻克历史文化名城台南",
+      "startingGold": 300,
+      "startingHealth": 100,
+      "enemyWaves": 5,
+      "enemiesPerWave": 7,
+      "enemyTypes": ["infantry", "fast", "tank"],
+      "spawnInterval": 2500,
+      "reward": 80,
+      "map": {
+        "start": { "x": 0, "y": 1 },
+        "end": { "x": 23, "y": 14 },
+        "path": [
+          { "x": 0, "y": 1 },
+          { "x": 4, "y": 1 },
+          { "x": 4, "y": 6 },
+          { "x": 10, "y": 6 },
+          { "x": 10, "y": 14 },
+          { "x": 16, "y": 14 },
+          { "x": 16, "y": 1 },
+          { "x": 20, "y": 1 },
+          { "x": 20, "y": 8 },
+          { "x": 23, "y": 8 }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "台中防线",
+      "description": "突破中部最坚固防线",
+      "startingGold": 350,
+      "startingHealth": 100,
+      "enemyWaves": 6,
+      "enemiesPerWave": 8,
+      "enemyTypes": ["infantry", "fast", "tank", "healer"],
+      "spawnInterval": 2200,
+      "reward": 100,
+      "map": {
+        "start": { "x": 0, "y": 0 },
+        "end": { "x": 23, "y": 15 },
+        "path": [
+          { "x": 0, "y": 0 },
+          { "x": 3, "y": 0 },
+          { "x": 3, "y": 8 },
+          { "x": 9, "y": 8 },
+          { "x": 9, "y": 3 },
+          { "x": 15, "y": 3 },
+          { "x": 15, "y": 11 },
+          { "x": 19, "y": 11 },
+          { "x": 19, "y": 5 },
+          { "x": 22, "y": 5 },
+          { "x": 22, "y": 15 },
+          { "x": 23, "y": 15 }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "新竹基地",
+      "description": "摧毁绿蛙军事基地",
+      "startingGold": 400,
+      "startingHealth": 100,
+      "enemyWaves": 7,
+      "enemiesPerWave": 9,
+      "enemyTypes": ["infantry", "fast", "tank", "healer"],
+      "spawnInterval": 2000,
+      "reward": 150,
+      "map": {
+        "start": { "x": 0, "y": 7 },
+        "end": { "x": 23, "y": 7 },
+        "path": [
+          { "x": 0, "y": 7 },
+          { "x": 3, "y": 7 },
+          { "x": 3, "y": 2 },
+          { "x": 8, "y": 2 },
+          { "x": 8, "y": 12 },
+          { "x": 13, "y": 12 },
+          { "x": 13, "y": 3 },
+          { "x": 18, "y": 3 },
+          { "x": 18, "y": 13 },
+          { "x": 21, "y": 13 },
+          { "x": 21, "y": 7 },
+          { "x": 23, "y": 7 }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "台北决战",
+      "description": "终结之战！攻克台北，实现祖国统一",
+      "startingGold": 500,
+      "startingHealth": 100,
+      "enemyWaves": 10,
+      "enemiesPerWave": 12,
+      "enemyTypes": ["infantry", "fast", "tank", "healer", "boss"],
+      "spawnInterval": 1500,
+      "reward": 300,
+      "map": {
+        "start": { "x": 0, "y": 0 },
+        "end": { "x": 12, "y": 9 },
+        "path": [
+          { "x": 0, "y": 0 },
+          { "x": 3, "y": 0 },
+          { "x": 3, "y": 7 },
+          { "x": 9, "y": 7 },
+          { "x": 9, "y": 1 },
+          { "x": 15, "y": 1 },
+          { "x": 15, "y": 10 },
+          { "x": 20, "y": 10 },
+          { "x": 20, "y": 3 },
+          { "x": 17, "y": 3 },
+          { "x": 17, "y": 14 },
+          { "x": 6, "y": 14 },
+          { "x": 6, "y": 6 },
+          { "x": 11, "y": 6 },
+          { "x": 11, "y": 12 },
+          { "x": 14, "y": 12 },
+          { "x": 14, "y": 9 },
+          { "x": 12, "y": 9 }
+        ]
+      }
+    }
+  ]
+}
