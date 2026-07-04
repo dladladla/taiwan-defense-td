@@ -210,7 +210,7 @@ class EnhancedAudio {
     try {
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.value = 0.5;
+      this.masterGain.gain.value = 0.85;
       this.masterGain.connect(this.ctx.destination);
     } catch (e) {
       console.warn('Web Audio API not available');
@@ -282,8 +282,8 @@ class EnhancedAudio {
    */
   playShoot(type = 'howitzer') {
     const map = { howitzer: 500, coastal: 700, missile: 200, railgun: 150 };
-    this._playTone(map[type], 0.12, 'square', 0.1);
-    this._playNoise(0.06, 0.05);
+    this._playTone(map[type], 0.20, 'square', 0.16);
+    this._playNoise(0.10, 0.08);
   }
 
   /**
@@ -292,8 +292,8 @@ class EnhancedAudio {
    */
   playHit(type = 'infantry') {
     const map = { infantry: 300, tank: 200, boss: 120, fast: 500, healer: 350 };
-    this._playTone(map[type], 0.08, 'sawtooth', 0.08);
-    this._playNoise(0.04, 0.04);
+    this._playTone(map[type], 0.14, 'sawtooth', 0.14);
+    this._playNoise(0.07, 0.07);
   }
 
   /** Low-frequency explosion. */
@@ -301,7 +301,7 @@ class EnhancedAudio {
     if (!this._ensure()) return;
     const osc = this._osc('sawtooth', 60);
     const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+    gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
     osc.frequency.setValueAtTime(120, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.4);
@@ -309,7 +309,7 @@ class EnhancedAudio {
     gain.connect(this.masterGain);
     osc.start();
     osc.stop(this.ctx.currentTime + 0.4);
-    this._playNoise(0.3, 0.15);
+    this._playNoise(0.3, 0.22);
   }
 
   /** Rising tone for tower upgrade. */
@@ -320,7 +320,7 @@ class EnhancedAudio {
       const osc = this._osc('sine', freq);
       const gain = this.ctx.createGain();
       const t = this.ctx.currentTime + i * 0.08;
-      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.setValueAtTime(0.20, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
       osc.connect(gain);
       gain.connect(this.masterGain);
@@ -337,7 +337,7 @@ class EnhancedAudio {
       const osc = this._osc('triangle', freq);
       const gain = this.ctx.createGain();
       const t = this.ctx.currentTime + i * 0.15;
-      gain.gain.setValueAtTime(0.15, t);
+      gain.gain.setValueAtTime(0.25, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
       osc.connect(gain);
       gain.connect(this.masterGain);
@@ -354,7 +354,7 @@ class EnhancedAudio {
       const osc = this._osc('triangle', freq);
       const gain = this.ctx.createGain();
       const t = this.ctx.currentTime + i * 0.12;
-      gain.gain.setValueAtTime(0.15, t);
+      gain.gain.setValueAtTime(0.22, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
       osc.connect(gain);
       gain.connect(this.masterGain);
@@ -371,7 +371,7 @@ class EnhancedAudio {
       const osc = this._osc('sawtooth', freq);
       const gain = this.ctx.createGain();
       const t = this.ctx.currentTime + i * 0.2;
-      gain.gain.setValueAtTime(0.15, t);
+      gain.gain.setValueAtTime(0.25, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
       osc.connect(gain);
       gain.connect(this.masterGain);
@@ -389,7 +389,7 @@ class EnhancedAudio {
       const osc = this._osc('triangle', freq);
       const gain = this.ctx.createGain();
       const t = this.ctx.currentTime + i * 0.07;
-      gain.gain.setValueAtTime(0.14, t);
+      gain.gain.setValueAtTime(0.22, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
       osc.connect(gain);
       gain.connect(this.masterGain);
@@ -397,8 +397,8 @@ class EnhancedAudio {
       osc.stop(t + 0.2);
     });
     // Deployment "click" anchor
-    this._playTone(1200, 0.06, 'square', 0.06);
-    this._playNoise(0.05, 0.04);
+    this._playTone(1200, 0.10, 'square', 0.10);
+    this._playNoise(0.05, 0.06);
   }
 
   /** Error / insufficient funds — low buzz. */
@@ -406,13 +406,13 @@ class EnhancedAudio {
     if (!this._ensure()) return;
     const osc = this._osc('square', 90);
     const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+    gain.gain.setValueAtTime(0.20, this.ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.25);
     osc.connect(gain);
     gain.connect(this.masterGain);
     osc.start();
     osc.stop(this.ctx.currentTime + 0.25);
-    this._playNoise(0.08, 0.06);
+    this._playNoise(0.08, 0.10);
   }
 
   /**
@@ -460,7 +460,7 @@ class EnhancedAudio {
       const osc = this._osc('square', freq);
       const gain = this.ctx.createGain();
       const t = now + i * beatTime;
-      gain.gain.setValueAtTime(0.05, t);
+      gain.gain.setValueAtTime(0.10, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + beatTime * 0.8);
       osc.connect(gain);
       gain.connect(this.masterGain);
@@ -473,7 +473,7 @@ class EnhancedAudio {
       const osc = this._osc('triangle', freq);
       const gain = this.ctx.createGain();
       const t = now + i * beatTime * 1.75;
-      gain.gain.setValueAtTime(0.05, t);
+      gain.gain.setValueAtTime(0.08, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + beatTime * 1.5);
       osc.connect(gain);
       gain.connect(this.masterGain);
@@ -494,7 +494,7 @@ class EnhancedAudio {
       const src = this.ctx.createBufferSource();
       src.buffer = buffer;
       const drumGain = this.ctx.createGain();
-      drumGain.gain.setValueAtTime(0.06, t);
+      drumGain.gain.setValueAtTime(0.12, t);
       drumGain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
       src.connect(drumGain);
       drumGain.connect(this.masterGain);
