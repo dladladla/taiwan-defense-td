@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="x5-orientation" content="landscape">
+    <meta name="x5-fullscreen" content="true">
+    <title>解放台湾 - 塔防 | 4399</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- 4399 H5 API (optional integration stub) -->
+    <!-- Uncomment and configure when integrating with 4399 platform:
+    <script src="https://h.api.4399.com/h5mini-2.0/h5api-interface.php"></script>
+    -->
+</head>
+<body>
+    <!-- Loading splash -->
+    <div id="loading-splash" class="loading-splash">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">正在加载游戏资源...</p>
+            <progress id="loading-progress" class="loading-progress" value="0" max="100"></progress>
+        </div>
+    </div>
+
+    <div class="game-wrapper">
+        <!-- 顶部状态栏 -->
+        <header class="status-bar">
+            <div class="status-item gold-display">
+                <span class="status-icon icon-gold"></span>
+                <span class="status-label">金币</span>
+                <span id="gold-value" class="status-value gold-text">250</span>
+            </div>
+            <div class="status-item health-display">
+                <span class="status-icon icon-heart"></span>
+                <span class="status-label">生命</span>
+                <div class="health-bar-container">
+                    <div id="health-bar" class="health-bar-fill"></div>
+                </div>
+                <span id="health-value" class="status-value">100</span>
+            </div>
+            <div class="status-item wave-display">
+                <span class="status-icon icon-wave"></span>
+                <span class="status-label">波次</span>
+                <div class="wave-progress-container">
+                    <div id="wave-progress" class="wave-progress-fill"></div>
+                </div>
+                <span id="wave-text" class="status-value">0/4</span>
+            </div>
+            <div class="status-item level-display">
+                <span class="status-icon icon-flag"></span>
+                <span class="status-label">关卡</span>
+                <span id="level-name" class="status-value">高雄港</span>
+            </div>
+            <div class="status-spacer"></div>
+            <div class="status-item kill-display">
+                <span class="status-label">击杀</span>
+                <span id="kill-count" class="status-value accent-text">0</span>
+            </div>
+            <div class="status-item combo-display">
+                <span class="status-label">连击</span>
+                <span id="combo-count" class="status-value combo-text">x0</span>
+            </div>
+            <div class="status-item score-display">
+                <span class="status-label">得分</span>
+                <span id="score-value" class="status-value gold-text">0</span>
+            </div>
+        </header>
+
+        <!-- 副标题 -->
+        <div class="subtitle-bar">
+            <span>消灭绿蛙，解放台湾全境</span>
+        </div>
+
+        <!-- 游戏主区域 -->
+        <main class="game-main">
+            <div class="canvas-container">
+                <canvas id="game-canvas" width="960" height="640"></canvas>
+                <div id="game-overlay" class="overlay hidden">
+                    <div class="overlay-content">
+                        <h2 id="overlay-title">准备就绪</h2>
+                        <p id="overlay-message">部署炮塔，消灭绿蛙</p>
+                        <button id="overlay-btn" class="btn btn-primary">开始战斗</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 移动端快捷面板（大屏隐藏） -->
+            <div id="mobile-controls" class="mobile-controls">
+                <button id="mbtn-start" class="btn btn-primary btn-mobile">开始</button>
+                <button id="mbtn-pause" class="btn btn-secondary btn-mobile">暂停</button>
+                <button id="mbtn-restart" class="btn btn-danger btn-mobile">重置</button>
+            </div>
+
+            <!-- 右侧浮动面板 -->
+            <aside class="side-panel">
+                <div class="panel-card stats-card">
+                    <h3 class="panel-title">战斗统计</h3>
+                    <div class="stat-row">
+                        <span>击杀数</span><span id="stat-kills">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>最高连击</span><span id="stat-max-combo">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>当前波次</span><span id="stat-wave">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>场上敌人</span><span id="stat-enemies">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>防御塔数</span><span id="stat-towers">0</span>
+                    </div>
+                </div>
+
+                <div class="panel-card level-card">
+                    <h3 class="panel-title">解放战役</h3>
+                    <div class="level-selector" id="level-selector">
+                        <!-- JS动态生成 -->
+                    </div>
+                </div>
+
+                <div class="panel-card control-card">
+                    <h3 class="panel-title">指挥</h3>
+                    <button id="btn-start" class="btn btn-primary btn-block">开始战斗</button>
+                    <button id="btn-pause" class="btn btn-secondary btn-block">暂停</button>
+                    <button id="btn-restart" class="btn btn-danger btn-block">重新部署</button>
+                </div>
+            </aside>
+        </main>
+
+        <!-- 底部工具栏：军事炮塔选择 -->
+        <footer class="toolbar">
+            <div class="toolbar-inner">
+                <!-- 155mm榴弹炮 -->
+                <div class="tower-card" data-type="howitzer" data-cost="40">
+                    <div class="tower-card-icon icon-howitzer"></div>
+                    <div class="tower-card-info">
+                        <span class="tower-card-name">155mm榴弹炮</span>
+                        <span class="tower-card-cost">40金</span>
+                    </div>
+                    <div class="tower-card-stats">
+                        <span class="stat-chip damage">伤害35</span>
+                        <span class="stat-chip range">射程180</span>
+                        <span class="stat-chip speed">中速</span>
+                        <span class="stat-chip trait">溅射</span>
+                    </div>
+                </div>
+                <!-- 岸防速射炮 -->
+                <div class="tower-card" data-type="coastal" data-cost="25">
+                    <div class="tower-card-icon icon-coastal"></div>
+                    <div class="tower-card-info">
+                        <span class="tower-card-name">岸防速射炮</span>
+                        <span class="tower-card-cost">25金</span>
+                    </div>
+                    <div class="tower-card-stats">
+                        <span class="stat-chip damage">伤害15</span>
+                        <span class="stat-chip range">射程140</span>
+                        <span class="stat-chip speed">快速</span>
+                        <span class="stat-chip trait">单体</span>
+                    </div>
+                </div>
+                <!-- 红旗-9导弹 -->
+                <div class="tower-card" data-type="missile" data-cost="120">
+                    <div class="tower-card-icon icon-missile"></div>
+                    <div class="tower-card-info">
+                        <span class="tower-card-name">红旗-9导弹</span>
+                        <span class="tower-card-cost">120金</span>
+                    </div>
+                    <div class="tower-card-stats">
+                        <span class="stat-chip damage">伤害120</span>
+                        <span class="stat-chip range">射程300</span>
+                        <span class="stat-chip speed">慢速</span>
+                        <span class="stat-chip trait">追踪</span>
+                    </div>
+                </div>
+                <!-- 电磁轨道炮 -->
+                <div class="tower-card" data-type="railgun" data-cost="80">
+                    <div class="tower-card-icon icon-railgun"></div>
+                    <div class="tower-card-info">
+                        <span class="tower-card-name">电磁轨道炮</span>
+                        <span class="tower-card-cost">80金</span>
+                    </div>
+                    <div class="tower-card-stats">
+                        <span class="stat-chip damage">伤害80</span>
+                        <span class="stat-chip range">射程240</span>
+                        <span class="stat-chip speed">慢速</span>
+                        <span class="stat-chip trait">穿透</span>
+                    </div>
+                </div>
+                <!-- 升级卡 -->
+                <div class="tower-card upgrade-card" id="upgrade-card">
+                    <div class="tower-card-icon icon-upgrade"></div>
+                    <div class="tower-card-info">
+                        <span class="tower-card-name">升级炮塔</span>
+                        <span class="tower-card-cost">右键点击</span>
+                    </div>
+                    <div class="tower-card-stats">
+                        <span class="stat-chip damage">+40%伤</span>
+                        <span class="stat-chip range">+1格</span>
+                        <span class="stat-chip speed">+15%速</span>
+                        <span class="stat-chip trait">右键</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    // Loading screen - hide when game initializes
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            var splash = document.getElementById('loading-splash');
+            if (splash) {
+                splash.style.opacity = '0';
+                splash.style.transition = 'opacity 0.3s ease';
+                setTimeout(function() { splash.remove(); }, 300);
+            }
+        }, 600);
+    });
+    </script>
+    <script src="game.js"></script>
+</body>
+</html>
