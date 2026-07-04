@@ -432,7 +432,7 @@ class EnhancedAudio {
 
     // Level-specific melody and tempo definitions
     const bgmDefs = {
-      1: { // C minor march
+      1: { // C minor military march (keep existing)
         melody: [262,311,392,523,622,523,392, 311,262,311,392,523,392,311,
                  262,392,523,622,523,466,392, 349,311,349,392,466,523,392,
                  294,349,440,587,523,440,349, 294,349,440,587,622,587,523,
@@ -440,42 +440,37 @@ class EnhancedAudio {
         bass: [131,131,131,131,131,131,131,131, 131,131,131,131,131,131,131,131,
                156,156,156,156,156,156,156,156, 175,175,175,175,175,175,175,175],
         beatTime: 0.13, waveType: 'square', bassType: 'triangle',
+        drumMode: 'perBeat', drumGain: 0.12,
       },
-      2: { // D phrygian — tense, middle-eastern half-steps
-        melody: [294,311,349,392, 294,311,349,392, 349,311,294,311, 349,392,440,466,
-                 392,349,311,294, 311,349,392,440, 349,311,294,311, 392,349,311,294,
-                 294,311,349,392, 440,466,440,392, 349,311,294,311, 392,440,466,523,
-                 466,440,392,349, 311,294,311,349, 392,311,294,311, 349,311,294,262],
-        bass: [147,147,147,147, 147,147,147,147, 175,175,175,175, 175,175,175,175,
-               147,147,147,147, 147,147,147,147, 175,175,175,175, 175,175,175,175],
-        beatTime: 0.12, waveType: 'sawtooth', bassType: 'triangle',
+      2: { // D dorian desert march — 32 melody, 16 bass, snare on weak beats
+        melody: [294,329,349,392, 440,349,329,294, 329,349,392,440, 494,440,392,329,
+                 294,329,349,392, 440,523,494,440, 349,392,440,494, 523,440,392,349],
+        bass: [147,147,220,220, 147,147,220,220, 147,147,220,220, 147,147,220,220],
+        beatTime: 0.14, waveType: 'sawtooth', bassType: 'triangle',
+        drumMode: 'weakBeat', drumGain: 0.10,
       },
-      3: { // E minor — heavy industrial, low pulse
-        melody: [165,196,220,261, 165,196,220,261, 220,196,165,196, 220,261,330,392,
-                 196,220,261,330, 261,220,196,165, 220,261,330,392, 330,261,220,196,
-                 165,196,220,261, 330,392,330,261, 220,196,165,196, 261,330,392,440,
-                 392,330,261,220, 196,165,196,220, 261,196,165,196, 220,196,165,147],
-        bass: [82,82,82,82, 82,82,82,82, 98,98,98,98, 98,98,98,98,
-               82,82,82,82, 82,82,82,82, 110,110,110,110, 110,110,110,110],
+      3: { // Eb minor industrial heavy — 24 melody, bass follows + octave, snare every 2 beats
+        melody: [311,370,415,466, 554,415,370,311, 349,370,415,466, 554,466,415,349,
+                 311,370,415,466, 554,622,554,466],
+        bass: [156,156,156,156, 156,156,156,156, 156,156,156,156],
         beatTime: 0.15, waveType: 'square', bassType: 'sine',
+        drumMode: 'every2beats', drumGain: 0.15, bassOctave: true,
       },
-      4: { // F minor — fast assault, quick drums
-        melody: [349,415,523,622, 349,415,523,622, 523,415,349,415, 523,622,698,784,
-                 415,523,622,698, 622,523,415,349, 523,622,698,784, 698,622,523,415,
-                 349,415,523,622, 698,784,698,622, 523,415,349,415, 622,698,784,880,
-                 784,698,622,523, 415,349,415,523, 622,415,349,415, 523,415,349,311],
-        bass: [175,175,175,175, 175,175,175,175, 208,208,208,208, 208,208,208,208,
-               175,175,175,175, 175,175,175,175, 233,233,233,233, 233,233,233,233],
-        beatTime: 0.10, waveType: 'square', bassType: 'triangle',
+      4: { // F phrygian raid — 32 melody, 16 bass, double snare per beat (fast rush)
+        melody: [349,369,415,466, 523,415,369,349, 369,415,466,523, 554,523,466,415,
+                 349,369,415,466, 523,622,554,523, 415,466,523,554, 622,554,523,466],
+        bass: [175,175,175,175, 175,175,175,175, 175,175,175,175, 175,175,175,175],
+        beatTime: 0.11, waveType: 'square', bassType: 'triangle',
+        drumMode: 'double', drumGain: 0.10,
       },
-      5: { // G minor — epic final battle, double snare
-        melody: [392,466,587,698, 784,698,587,466, 392,466,587,698, 784,880,784,698,
-                 466,587,698,784, 880,932,880,784, 698,587,466,392, 587,698,784,880,
-                 392,466,587,698, 784,698,587,466, 523,622,698,784, 880,932,1047,880,
-                 784,698,587,466, 392,466,587,698, 784,880,932,1047, 932,880,784,698],
-        bass: [196,196,196,196, 196,196,196,196, 233,233,233,233, 233,233,233,233,
-               196,196,196,196, 196,196,196,196, 262,262,262,262, 262,262,262,262],
-        beatTime: 0.14, waveType: 'square', bassType: 'triangle',
+      5: { // G minor epic symphony — 40 melody, octave bass, triple snare, kick drum
+        melody: [392,440,466,523, 587,698,784,880, 784,698,587,523, 466,440,392,440,
+                 466,523,587,698, 784,880,932,880, 784,698,587,523, 466,440,392,392,
+                 523,587,698,784, 880,932,1047,880],
+        bass: [196,392,233,466, 262,523,196,392, 233,466,196,392, 262,523,233,466,
+               196,392,233,466],
+        beatTime: 0.12, waveType: 'square', bassType: 'triangle',
+        drumMode: 'triple', drumGain: 0.12, kickDrum: true,
       },
     };
 
@@ -498,23 +493,34 @@ class EnhancedAudio {
     });
 
     // Bass
+    const bassMultiplier = def.bassOctave ? 1.75 : 1.75;
     bass.forEach((freq, i) => {
       const osc = this._osc(def.bassType, freq);
       const gain = this.ctx.createGain();
-      const t = now + i * beatTime * 1.75;
-      gain.gain.setValueAtTime(0.08, t);
+      const t = now + i * beatTime * bassMultiplier;
+      gain.gain.setValueAtTime(def.bassOctave ? 0.10 : 0.08, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + beatTime * 1.5);
       osc.connect(gain);
       gain.connect(this.masterGain);
       osc.start(t);
-      osc.stop(t + beatTime * 1.75);
+      osc.stop(t + beatTime * bassMultiplier);
+
+      // Level 3: bass octave doubling for heavy industrial sound
+      if (def.bassOctave) {
+        const osc2 = this._osc(def.bassType, freq * 2);
+        const gain2 = this.ctx.createGain();
+        gain2.gain.setValueAtTime(0.05, t);
+        gain2.gain.exponentialRampToValueAtTime(0.001, t + beatTime * 1.5);
+        osc2.connect(gain2);
+        gain2.connect(this.masterGain);
+        osc2.start(t);
+        osc2.stop(t + beatTime * bassMultiplier);
+      }
     });
 
-    // Snare drum layer
-    const snareCount = levelNumber === 5 ? melody.length * 2 : melody.length;
-    for (let i = 0; i < snareCount; i++) {
-      const t = now + i * (levelNumber === 5 ? beatTime * 0.5 : beatTime);
-      const bufferSize = Math.floor(this.ctx.sampleRate * 0.04);
+    // Snare / drum layer — per-level patterns
+    const snareNoise = (t, gainVal, duration) => {
+      const bufferSize = Math.floor(this.ctx.sampleRate * duration);
       const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let s = 0; s < bufferSize; s++) {
@@ -523,12 +529,45 @@ class EnhancedAudio {
       const src = this.ctx.createBufferSource();
       src.buffer = buffer;
       const drumGain = this.ctx.createGain();
-      drumGain.gain.setValueAtTime(0.12, t);
-      drumGain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+      drumGain.gain.setValueAtTime(gainVal, t);
+      drumGain.gain.exponentialRampToValueAtTime(0.001, t + duration);
       src.connect(drumGain);
       drumGain.connect(this.masterGain);
       src.start(t);
-      src.stop(t + 0.04);
+      src.stop(t + duration);
+    };
+
+    switch (def.drumMode) {
+      case 'weakBeat': // Level 2: snare on weak beats (off-beat emphasis)
+        for (let i = 0; i < melody.length; i++) {
+          snareNoise(now + i * beatTime + beatTime * 0.5, def.drumGain, 0.04);
+        }
+        break;
+      case 'every2beats': // Level 3: snare every 2 beats (sparser but heavier)
+        for (let i = 0; i < melody.length; i += 2) {
+          snareNoise(now + i * beatTime, def.drumGain, 0.06);
+        }
+        break;
+      case 'double': // Level 4: double snare per beat (fast rush)
+        for (let i = 0; i < melody.length; i++) {
+          snareNoise(now + i * beatTime, def.drumGain, 0.03);
+          snareNoise(now + i * beatTime + beatTime * 0.5, def.drumGain * 0.8, 0.03);
+        }
+        break;
+      case 'triple': // Level 5: triple snare + kick drum bursts
+        for (let i = 0; i < melody.length; i++) {
+          snareNoise(now + i * beatTime, def.drumGain * 0.7, 0.03);
+          snareNoise(now + i * beatTime + beatTime * 0.33, def.drumGain * 0.6, 0.03);
+          snareNoise(now + i * beatTime + beatTime * 0.66, def.drumGain * 0.6, 0.03);
+          // Kick drum burst (lower frequency noise) every beat
+          snareNoise(now + i * beatTime, def.drumGain * 1.3, 0.08);
+        }
+        break;
+      default: // Level 1: one snare per beat
+        for (let i = 0; i < melody.length; i++) {
+          snareNoise(now + i * beatTime, def.drumGain, 0.04);
+        }
+        break;
     }
 
     const totalDuration = melody.length * beatTime;
@@ -692,9 +731,9 @@ class TowerDefenseGame {
         enemyTypes: ['infantry', 'fast', 'tank'], spawnInterval: 2500, reward: 80,
         map: { start: { x: 0, y: 1 }, end: { x: 23, y: 14 },
           path: [
-            { x: 0, y: 1 }, { x: 4, y: 1 }, { x: 4, y: 6 }, { x: 10, y: 6 },
-            { x: 10, y: 14 }, { x: 16, y: 14 }, { x: 16, y: 1 }, { x: 20, y: 1 },
-            { x: 20, y: 8 }, { x: 23, y: 8 },
+            { x: 0, y: 1 }, { x: 3, y: 1 }, { x: 3, y: 10 }, { x: 7, y: 10 },
+            { x: 7, y: 3 }, { x: 11, y: 3 }, { x: 11, y: 12 }, { x: 15, y: 12 },
+            { x: 15, y: 5 }, { x: 19, y: 5 }, { x: 19, y: 14 }, { x: 23, y: 14 },
           ],
         },
       },
@@ -702,11 +741,11 @@ class TowerDefenseGame {
         id: 3, name: '台中防线', description: '突破中部最坚固防线',
         startingGold: 350, startingHealth: 100, enemyWaves: 6, enemiesPerWave: 9,
         enemyTypes: ['infantry', 'fast', 'tank', 'healer'], spawnInterval: 2200, reward: 100,
-        map: { start: { x: 0, y: 0 }, end: { x: 23, y: 15 },
+        map: { start: { x: 0, y: 0 }, end: { x: 23, y: 13 },
           path: [
-            { x: 0, y: 0 }, { x: 0, y: 3 }, { x: 8, y: 3 }, { x: 8, y: 11 },
-            { x: 16, y: 11 }, { x: 16, y: 2 }, { x: 20, y: 2 }, { x: 20, y: 8 },
-            { x: 12, y: 8 }, { x: 12, y: 15 }, { x: 23, y: 15 },
+            { x: 0, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 9 }, { x: 7, y: 9 },
+            { x: 7, y: 2 }, { x: 11, y: 2 }, { x: 11, y: 11 }, { x: 15, y: 11 },
+            { x: 15, y: 4 }, { x: 19, y: 4 }, { x: 19, y: 13 }, { x: 23, y: 13 },
           ],
         },
       },
@@ -714,11 +753,12 @@ class TowerDefenseGame {
         id: 4, name: '新竹基地', description: '摧毁绿蛙军事基地',
         startingGold: 400, startingHealth: 100, enemyWaves: 7, enemiesPerWave: 10,
         enemyTypes: ['infantry', 'fast', 'tank', 'healer'], spawnInterval: 2000, reward: 150,
-        map: { start: { x: 0, y: 7 }, end: { x: 23, y: 7 },
+        map: { start: { x: 0, y: 7 }, end: { x: 23, y: 6 },
           path: [
-            { x: 0, y: 7 }, { x: 3, y: 7 }, { x: 3, y: 2 }, { x: 8, y: 2 },
-            { x: 8, y: 12 }, { x: 13, y: 12 }, { x: 13, y: 3 }, { x: 18, y: 3 },
-            { x: 18, y: 13 }, { x: 21, y: 13 }, { x: 21, y: 7 }, { x: 23, y: 7 },
+            { x: 0, y: 7 }, { x: 2, y: 7 }, { x: 2, y: 14 }, { x: 6, y: 14 },
+            { x: 6, y: 5 }, { x: 10, y: 5 }, { x: 10, y: 13 }, { x: 14, y: 13 },
+            { x: 14, y: 3 }, { x: 18, y: 3 }, { x: 18, y: 12 }, { x: 22, y: 12 },
+            { x: 22, y: 6 }, { x: 23, y: 6 },
           ],
         },
       },
@@ -726,13 +766,12 @@ class TowerDefenseGame {
         id: 5, name: '台北决战', description: '终结之战！攻克台北，实现祖国统一',
         startingGold: 500, startingHealth: 100, enemyWaves: 10, enemiesPerWave: 13,
         enemyTypes: ['infantry', 'fast', 'tank', 'healer', 'boss', 'finalboss'], spawnInterval: 1500, reward: 300,
-        map: { start: { x: 0, y: 0 }, end: { x: 12, y: 7 },
+        map: { start: { x: 0, y: 0 }, end: { x: 23, y: 10 },
           path: [
-            { x: 0, y: 0 }, { x: 6, y: 0 }, { x: 6, y: 4 }, { x: 14, y: 4 },
-            { x: 14, y: 12 }, { x: 2, y: 12 }, { x: 2, y: 8 }, { x: 8, y: 8 },
-            { x: 8, y: 2 }, { x: 18, y: 2 }, { x: 18, y: 10 }, { x: 22, y: 10 },
-            { x: 22, y: 5 }, { x: 16, y: 5 }, { x: 16, y: 15 }, { x: 10, y: 15 },
-            { x: 10, y: 10 }, { x: 12, y: 10 },
+            { x: 0, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 13 }, { x: 5, y: 13 },
+            { x: 5, y: 3 }, { x: 8, y: 3 }, { x: 8, y: 11 }, { x: 11, y: 11 },
+            { x: 11, y: 2 }, { x: 14, y: 2 }, { x: 14, y: 12 }, { x: 17, y: 12 },
+            { x: 17, y: 4 }, { x: 20, y: 4 }, { x: 20, y: 10 }, { x: 23, y: 10 },
           ],
         },
       },
