@@ -1956,23 +1956,130 @@ class TowerDefenseGame {
           ctx.fillRect(x, y, cs, 2);
           ctx.fillRect(x, y + cs - 2, cs, 2);
         } else if (v === 2) {
-          // Start: green glow
-          ctx.fillStyle = '#1a5c1a';
+          // Start: military bunker icon
+          ctx.fillStyle = '#1a3010';
           ctx.fillRect(x, y, cs, cs);
-          ctx.fillStyle = '#00ff44';
-          ctx.font = 'bold 22px "Microsoft YaHei", sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('S', x + cs / 2, y + cs / 2);
+          const cx_s = x + cs / 2;
+          const cy_s = y + cs / 2;
+          // Bunker base (trapezoid)
+          ctx.fillStyle = '#4a6b3a';
+          ctx.beginPath();
+          ctx.moveTo(cx_s - 13, cy_s + 10);
+          ctx.lineTo(cx_s - 11, cy_s - 2);
+          ctx.lineTo(cx_s + 11, cy_s - 2);
+          ctx.lineTo(cx_s + 13, cy_s + 10);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = '#2d4a1e';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          // Bunker dome (semi-circle on top)
+          ctx.fillStyle = '#5a7d45';
+          ctx.beginPath();
+          ctx.arc(cx_s, cy_s - 2, 9, Math.PI, 0);
+          ctx.fill();
+          ctx.strokeStyle = '#2d4a1e';
+          ctx.stroke();
+          // Firing slit
+          ctx.fillStyle = '#0a0a0a';
+          ctx.fillRect(cx_s - 5, cy_s + 1, 10, 4);
+          ctx.fillRect(cx_s - 1, cy_s - 2, 2, 4);
+          // Small flag
+          ctx.strokeStyle = '#888';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(cx_s + 2, cy_s - 20);
+          ctx.lineTo(cx_s + 2, cy_s - 8);
+          ctx.stroke();
+          ctx.fillStyle = '#cc2222';
+          ctx.beginPath();
+          ctx.moveTo(cx_s + 2, cy_s - 20);
+          ctx.lineTo(cx_s + 12, cy_s - 17);
+          ctx.lineTo(cx_s + 2, cy_s - 14);
+          ctx.fill();
+          ctx.lineWidth = 0.5;
         } else if (v === 3) {
-          // End: red glow
-          ctx.fillStyle = '#5c1a1a';
+          // End: Taiwan island cartoon baby icon
+          ctx.fillStyle = '#1a2a3a';
           ctx.fillRect(x, y, cs, cs);
-          ctx.fillStyle = '#ff4444';
-          ctx.font = 'bold 22px "Microsoft YaHei", sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('E', x + cs / 2, y + cs / 2);
+          const cx_e = x + cs / 2;
+          const cy_e = y + cs / 2 + 2;
+          // Glow ring
+          ctx.fillStyle = 'rgba(255,180,60,0.15)';
+          ctx.beginPath();
+          ctx.arc(cx_e, cy_e, 18, 0, Math.PI * 2);
+          ctx.fill();
+          // Taiwan island shape (leaf-like, pointed south-east)
+          ctx.fillStyle = '#2d8a4a';
+          ctx.beginPath();
+          ctx.moveTo(cx_e - 8, cy_e - 8);
+          ctx.bezierCurveTo(cx_e - 14, cy_e - 2, cx_e - 14, cy_e + 6, cx_e + 2, cy_e + 12);
+          ctx.bezierCurveTo(cx_e + 12, cy_e + 4, cx_e + 14, cy_e - 4, cx_e + 6, cy_e - 10);
+          ctx.bezierCurveTo(cx_e, cy_e - 14, cx_e - 4, cy_e - 12, cx_e - 8, cy_e - 8);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = '#1a5a2a';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          // Central mountain ridge
+          ctx.fillStyle = '#1a6a30';
+          ctx.beginPath();
+          ctx.moveTo(cx_e - 2, cy_e - 7);
+          ctx.bezierCurveTo(cx_e - 4, cy_e - 2, cx_e - 4, cy_e + 4, cx_e + 1, cy_e + 8);
+          ctx.bezierCurveTo(cx_e + 4, cy_e + 4, cx_e + 5, cy_e - 1, cx_e + 2, cy_e - 7);
+          ctx.closePath();
+          ctx.fill();
+          // Baby eyes (two white dots with black pupils)
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(cx_e - 4, cy_e - 3, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(cx_e + 4, cy_e - 3, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#111111';
+          ctx.beginPath();
+          ctx.arc(cx_e - 3, cy_e - 2.5, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(cx_e + 5, cy_e - 2.5, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+          // Eye shine
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(cx_e - 2, cy_e - 3.5, 0.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(cx_e + 6, cy_e - 3.5, 0.8, 0, Math.PI * 2);
+          ctx.fill();
+          // Rosy cheeks
+          ctx.fillStyle = 'rgba(255,140,140,0.6)';
+          ctx.beginPath();
+          ctx.arc(cx_e - 7, cy_e - 1, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(cx_e + 8, cy_e - 1, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          // Cute smile
+          ctx.strokeStyle = '#442222';
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.arc(cx_e, cy_e + 3, 4, 0.2 * Math.PI, 0.8 * Math.PI);
+          ctx.stroke();
+          // Tiny bow on top-left
+          ctx.fillStyle = '#ff6688';
+          ctx.beginPath();
+          ctx.moveTo(cx_e - 10, cy_e - 10);
+          ctx.bezierCurveTo(cx_e - 14, cy_e - 16, cx_e - 8, cy_e - 18, cx_e - 10, cy_e - 10);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(cx_e - 10, cy_e - 10);
+          ctx.bezierCurveTo(cx_e - 6, cy_e - 16, cx_e - 12, cy_e - 5, cx_e - 10, cy_e - 10);
+          ctx.fill();
+          ctx.fillStyle = '#ffaacc';
+          ctx.beginPath();
+          ctx.arc(cx_e - 10, cy_e - 11, 1.5, 0, Math.PI * 2);
+          ctx.fill();
         } else if (v === 4) {
           // Occupied by tower (grass underneath with marker)
           const b = 30 + (seed % 15);
