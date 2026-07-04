@@ -416,48 +416,77 @@ class EnhancedAudio {
   }
 
   /**
-   * Start looping background music — C minor military march style.
+   * Start looping background music for the given level.
+   * @param {number} levelNumber - 1-based level ID
    */
-  startBGM() {
+  startBGM(levelNumber = 1) {
     if (!this._ensure() || this.bgmPlaying) return;
     this.bgmPlaying = true;
-    this._bgmLoop();
+    this._bgmLoop(levelNumber);
   }
 
-  /** Internal BGM sequencer — C minor battle march, fast tempo. */
-  _bgmLoop() {
+  /** Internal BGM sequencer — per-level melody. */
+  _bgmLoop(levelNumber) {
     if (!this.bgmPlaying || !this.ctx) return;
     const now = this.ctx.currentTime;
 
-    // C minor battle march — aggressive, leaping intervals
-    const melody = [
-      // Bar 1-2: ascending arpeggio
-      262, 311, 392, 523, 622, 523, 392,
-      311, 262, 311, 392, 523, 392, 311,
-      // Bar 3-4: leap up to high register
-      262, 392, 523, 622, 523, 466, 392,
-      349, 311, 349, 392, 466, 523, 392,
-      // Bar 5-6: tense, staccato feel
-      294, 349, 440, 587, 523, 440, 349,
-      294, 349, 440, 587, 622, 587, 523,
-      // Bar 7-8: triumphant ending
-      392, 466, 523, 622, 466, 523, 392,
-      311, 262, 311, 392, 523, 466, 311,
-    ];
+    // Level-specific melody and tempo definitions
+    const bgmDefs = {
+      1: { // C minor march
+        melody: [262,311,392,523,622,523,392, 311,262,311,392,523,392,311,
+                 262,392,523,622,523,466,392, 349,311,349,392,466,523,392,
+                 294,349,440,587,523,440,349, 294,349,440,587,622,587,523,
+                 392,466,523,622,466,523,392, 311,262,311,392,523,466,311],
+        bass: [131,131,131,131,131,131,131,131, 131,131,131,131,131,131,131,131,
+               156,156,156,156,156,156,156,156, 175,175,175,175,175,175,175,175],
+        beatTime: 0.13, waveType: 'square', bassType: 'triangle',
+      },
+      2: { // D phrygian — tense, middle-eastern half-steps
+        melody: [294,311,349,392, 294,311,349,392, 349,311,294,311, 349,392,440,466,
+                 392,349,311,294, 311,349,392,440, 349,311,294,311, 392,349,311,294,
+                 294,311,349,392, 440,466,440,392, 349,311,294,311, 392,440,466,523,
+                 466,440,392,349, 311,294,311,349, 392,311,294,311, 349,311,294,262],
+        bass: [147,147,147,147, 147,147,147,147, 175,175,175,175, 175,175,175,175,
+               147,147,147,147, 147,147,147,147, 175,175,175,175, 175,175,175,175],
+        beatTime: 0.12, waveType: 'sawtooth', bassType: 'triangle',
+      },
+      3: { // E minor — heavy industrial, low pulse
+        melody: [165,196,220,261, 165,196,220,261, 220,196,165,196, 220,261,330,392,
+                 196,220,261,330, 261,220,196,165, 220,261,330,392, 330,261,220,196,
+                 165,196,220,261, 330,392,330,261, 220,196,165,196, 261,330,392,440,
+                 392,330,261,220, 196,165,196,220, 261,196,165,196, 220,196,165,147],
+        bass: [82,82,82,82, 82,82,82,82, 98,98,98,98, 98,98,98,98,
+               82,82,82,82, 82,82,82,82, 110,110,110,110, 110,110,110,110],
+        beatTime: 0.15, waveType: 'square', bassType: 'sine',
+      },
+      4: { // F minor — fast assault, quick drums
+        melody: [349,415,523,622, 349,415,523,622, 523,415,349,415, 523,622,698,784,
+                 415,523,622,698, 622,523,415,349, 523,622,698,784, 698,622,523,415,
+                 349,415,523,622, 698,784,698,622, 523,415,349,415, 622,698,784,880,
+                 784,698,622,523, 415,349,415,523, 622,415,349,415, 523,415,349,311],
+        bass: [175,175,175,175, 175,175,175,175, 208,208,208,208, 208,208,208,208,
+               175,175,175,175, 175,175,175,175, 233,233,233,233, 233,233,233,233],
+        beatTime: 0.10, waveType: 'square', bassType: 'triangle',
+      },
+      5: { // G minor — epic final battle, double snare
+        melody: [392,466,587,698, 784,698,587,466, 392,466,587,698, 784,880,784,698,
+                 466,587,698,784, 880,932,880,784, 698,587,466,392, 587,698,784,880,
+                 392,466,587,698, 784,698,587,466, 523,622,698,784, 880,932,1047,880,
+                 784,698,587,466, 392,466,587,698, 784,880,932,1047, 932,880,784,698],
+        bass: [196,196,196,196, 196,196,196,196, 233,233,233,233, 233,233,233,233,
+               196,196,196,196, 196,196,196,196, 262,262,262,262, 262,262,262,262],
+        beatTime: 0.14, waveType: 'square', bassType: 'triangle',
+      },
+    };
 
-    // Faster bass line — follows harmony
-    const bass = [
-      131, 131, 131, 131,  131, 131, 131, 131,
-      131, 131, 131, 131,  131, 131, 131, 131,
-      156, 156, 156, 156,  156, 156, 156, 156,
-      175, 175, 175, 175,  175, 175, 175, 175,
-    ];
+    const def = bgmDefs[levelNumber] || bgmDefs[1];
+    const melody = def.melody;
+    const bass = def.bass;
+    const beatTime = def.beatTime;
 
-    const beatTime = 0.13; // faster tempo (~460 bpm feel)
-
-    // --- Melody (square wave, brighter) ---
+    // Melody
     melody.forEach((freq, i) => {
-      const osc = this._osc('square', freq);
+      const osc = this._osc(def.waveType, freq);
       const gain = this.ctx.createGain();
       const t = now + i * beatTime;
       gain.gain.setValueAtTime(0.10, t);
@@ -468,9 +497,9 @@ class EnhancedAudio {
       osc.stop(t + beatTime);
     });
 
-    // --- Bass (triangle, deeper support) ---
+    // Bass
     bass.forEach((freq, i) => {
-      const osc = this._osc('triangle', freq);
+      const osc = this._osc(def.bassType, freq);
       const gain = this.ctx.createGain();
       const t = now + i * beatTime * 1.75;
       gain.gain.setValueAtTime(0.08, t);
@@ -481,10 +510,10 @@ class EnhancedAudio {
       osc.stop(t + beatTime * 1.75);
     });
 
-    // --- Snare / marching drum layer (noise burst on each beat) ---
-    for (let i = 0; i < melody.length; i++) {
-      const t = now + i * beatTime;
-      // Snare burst — short noise burst with slight pitch
+    // Snare drum layer
+    const snareCount = levelNumber === 5 ? melody.length * 2 : melody.length;
+    for (let i = 0; i < snareCount; i++) {
+      const t = now + i * (levelNumber === 5 ? beatTime * 0.5 : beatTime);
       const bufferSize = Math.floor(this.ctx.sampleRate * 0.04);
       const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -503,7 +532,7 @@ class EnhancedAudio {
     }
 
     const totalDuration = melody.length * beatTime;
-    this._bgmTimer = setTimeout(() => this._bgmLoop(), totalDuration * 1000 - 50);
+    this._bgmTimer = setTimeout(() => this._bgmLoop(levelNumber), totalDuration * 1000 - 50);
   }
 
   /** Stop background music. */
@@ -648,7 +677,7 @@ class TowerDefenseGame {
     return [
       {
         id: 1, name: '高雄港', description: '解放南台湾第一站，突破高雄港防线',
-        startingGold: 250, startingHealth: 100, enemyWaves: 4, enemiesPerWave: 6,
+        startingGold: 250, startingHealth: 100, enemyWaves: 4, enemiesPerWave: 7,
         enemyTypes: ['infantry', 'fast'], spawnInterval: 2800, reward: 60,
         map: { start: { x: 0, y: 2 }, end: { x: 23, y: 13 },
           path: [
@@ -659,7 +688,7 @@ class TowerDefenseGame {
       },
       {
         id: 2, name: '台南城', description: '攻克历史文化名城台南',
-        startingGold: 300, startingHealth: 100, enemyWaves: 5, enemiesPerWave: 7,
+        startingGold: 300, startingHealth: 100, enemyWaves: 5, enemiesPerWave: 8,
         enemyTypes: ['infantry', 'fast', 'tank'], spawnInterval: 2500, reward: 80,
         map: { start: { x: 0, y: 1 }, end: { x: 23, y: 14 },
           path: [
@@ -671,7 +700,7 @@ class TowerDefenseGame {
       },
       {
         id: 3, name: '台中防线', description: '突破中部最坚固防线',
-        startingGold: 350, startingHealth: 100, enemyWaves: 6, enemiesPerWave: 8,
+        startingGold: 350, startingHealth: 100, enemyWaves: 6, enemiesPerWave: 9,
         enemyTypes: ['infantry', 'fast', 'tank', 'healer'], spawnInterval: 2200, reward: 100,
         map: { start: { x: 0, y: 0 }, end: { x: 23, y: 15 },
           path: [
@@ -683,7 +712,7 @@ class TowerDefenseGame {
       },
       {
         id: 4, name: '新竹基地', description: '摧毁绿蛙军事基地',
-        startingGold: 400, startingHealth: 100, enemyWaves: 7, enemiesPerWave: 9,
+        startingGold: 400, startingHealth: 100, enemyWaves: 7, enemiesPerWave: 10,
         enemyTypes: ['infantry', 'fast', 'tank', 'healer'], spawnInterval: 2000, reward: 150,
         map: { start: { x: 0, y: 7 }, end: { x: 23, y: 7 },
           path: [
@@ -695,8 +724,8 @@ class TowerDefenseGame {
       },
       {
         id: 5, name: '台北决战', description: '终结之战！攻克台北，实现祖国统一',
-        startingGold: 500, startingHealth: 100, enemyWaves: 10, enemiesPerWave: 12,
-        enemyTypes: ['infantry', 'fast', 'tank', 'healer', 'boss'], spawnInterval: 1500, reward: 300,
+        startingGold: 500, startingHealth: 100, enemyWaves: 10, enemiesPerWave: 13,
+        enemyTypes: ['infantry', 'fast', 'tank', 'healer', 'boss', 'finalboss'], spawnInterval: 1500, reward: 300,
         map: { start: { x: 0, y: 0 }, end: { x: 12, y: 7 },
           path: [
             { x: 0, y: 0 }, { x: 6, y: 0 }, { x: 6, y: 4 }, { x: 14, y: 4 },
@@ -1110,11 +1139,15 @@ class TowerDefenseGame {
 
   startGame() {
     if (this.gameState === 'playing') return;
+    if (this.gameState === 'victory') {
+      this.restartGame();
+      return;
+    }
     this.gameState = 'playing';
     if (this.currentWave === 0) {
       this.startWave();
     }
-    this.audioEngine.startBGM();
+    this.audioEngine.startBGM(this.currentLevel);
     this._updateHUD();
   }
 
@@ -1125,7 +1158,7 @@ class TowerDefenseGame {
       this._showOverlay('战斗暂停', '按空格键或点击继续');
     } else if (this.gameState === 'paused') {
       this.gameState = 'playing';
-      this.audioEngine.startBGM();
+      this.audioEngine.startBGM(this.currentLevel);
       document.getElementById('game-overlay').classList.add('hidden');
     }
     this._updateHUD();
@@ -1211,6 +1244,10 @@ class TowerDefenseGame {
     }
     this.enemies.push(enemy);
     this.enemiesSpawnedInWave++;
+    // Finalboss: init summon thresholds (every 20% HP)
+    if (type === 'finalboss') {
+      enemy.nextSummonThreshold = enemy.maxHp * 0.8;
+    }
     this.enemiesRemainingInWave = this.levelConfig.enemiesPerWave - this.enemiesSpawnedInWave + this.enemies.filter(e => e.alive).length;
   }
 
@@ -1221,11 +1258,12 @@ class TowerDefenseGame {
    */
   _enemyStats(type) {
     const map = {
-      infantry: { hp: 50, speed: 1.0, reward: 10 },
-      fast:     { hp: 30, speed: 1.8, reward: 8 },
-      tank:     { hp: 120, speed: 0.6, reward: 25 },
-      boss:     { hp: 350, speed: 0.4, reward: 80 },
-      healer:   { hp: 60, speed: 0.9, reward: 15 },
+      infantry:  { hp: 110, speed: 1.0, reward: 10 },
+      fast:      { hp: 70, speed: 1.89, reward: 8 },
+      tank:      { hp: 350, speed: 0.6, reward: 25 },
+      boss:      { hp: 2000, speed: 0.4, reward: 80 },
+      healer:    { hp: 170, speed: 0.9, reward: 15 },
+      finalboss: { hp: 5000, speed: 0.6, reward: 500 },
     };
     return map[type] || map.infantry;
   }
@@ -1237,20 +1275,14 @@ class TowerDefenseGame {
    * @returns {{damage:number, range:number, cooldown:number}}
    */
   _towerStats(type, level) {
-    const levelMult = [1, 1.5, 2.2];
-    const mult = levelMult[Math.min(level - 1, 2)] || 1;
-    const base = {
-      howitzer: { damage: 35, range: 180, cooldown: 45 },
-      coastal:  { damage: 15, range: 140, cooldown: 18 },
-      missile:  { damage: 120,range: 300, cooldown: 80 },
-      railgun:  { damage: 80, range: 240, cooldown: 70 },
+    const stats = {
+      howitzer: [{ damage: 28, range: 180, cooldown: 55 }, { damage: 45, range: 180, cooldown: 50 }, { damage: 70, range: 180, cooldown: 45 }],
+      coastal:  [{ damage: 12, range: 140, cooldown: 22 }, { damage: 20, range: 140, cooldown: 20 }, { damage: 35, range: 140, cooldown: 18 }],
+      missile:  [{ damage: 100,range: 300, cooldown: 100 },{ damage: 160,range: 300, cooldown: 90 }, { damage: 250,range: 300, cooldown: 85 }],
+      railgun:  [{ damage: 65, range: 240, cooldown: 85 }, { damage: 100,range: 240, cooldown: 80 }, { damage: 150,range: 240, cooldown: 75 }],
     };
-    const b = base[type] || base.howitzer;
-    return {
-      damage: Math.floor(b.damage * mult),
-      range: b.range,
-      cooldown: b.cooldown,
-    };
+    const s = (stats[type] || stats.howitzer)[Math.min(level - 1, 2)];
+    return { damage: s.damage, range: s.range, cooldown: s.cooldown };
   }
 
   /** Check if wave is complete. */
@@ -1684,6 +1716,14 @@ class TowerDefenseGame {
     });
     this.audioEngine.playHit(enemy.type);
 
+    // Finalboss: summon minions at 20% HP thresholds
+    if (enemy.type === 'finalboss' && enemy.nextSummonThreshold !== undefined &&
+        enemy.hp <= enemy.nextSummonThreshold && enemy.alive) {
+      this._summonFinalbossMinions(enemy);
+      enemy.nextSummonThreshold = Math.max(0, enemy.nextSummonThreshold - enemy.maxHp * 0.2);
+      if (enemy.nextSummonThreshold <= 0) enemy.nextSummonThreshold = -1;
+    }
+
     if (enemy.hp <= 0) {
       enemy.alive = false;
 
@@ -1709,7 +1749,14 @@ class TowerDefenseGame {
       this.killCount++;
 
       // Boss death: big explosion
-      if (enemy.type === 'boss') {
+      if (enemy.type === 'finalboss') {
+        this.particleEngine.emit('explosion', enemy.x, enemy.y, { count: 80, speed: 8, size: 8, color: '#ff0000' });
+        this.particleEngine.emit('explosion', enemy.x, enemy.y, { count: 40, speed: 4, size: 5, color: '#ff8800' });
+        this.particleEngine.emit('smoke', enemy.x, enemy.y, { count: 40, speed: 2, size: 15 });
+        this.screenShake(480, 15);
+        this.audioEngine.playExplosion();
+        this._onFinalbossDefeat();
+      } else if (enemy.type === 'boss') {
         this.particleEngine.emit('explosion', enemy.x, enemy.y, { count: 40, speed: 5, size: 5, color: '#ff2222' });
         this.particleEngine.emit('smoke', enemy.x, enemy.y, { count: 20, speed: 1.5, size: 10 });
         this.screenShake(15, 6);
@@ -1726,6 +1773,71 @@ class TowerDefenseGame {
         life: 40,
         speed: 0.9,
       });
+    }
+  }
+
+  /**
+   * Finalboss summons 4 infantry minions from its position.
+   * @param {Object} boss
+   */
+  _summonFinalbossMinions(boss) {
+    const minionCount = 4;
+    for (let i = 0; i < minionCount; i++) {
+      const stats = this._enemyStats('infantry');
+      const angle = (Math.PI * 2 / minionCount) * i;
+      const spawnDist = 25;
+      const minion = {
+        type: 'infantry',
+        x: boss.x + Math.cos(angle) * spawnDist,
+        y: boss.y + Math.sin(angle) * spawnDist,
+        hp: stats.hp,
+        maxHp: stats.hp,
+        speed: stats.speed,
+        reward: 0,
+        pathIndex: boss.pathIndex,
+        targetX: boss.targetX,
+        targetY: boss.targetY,
+        frameCounter: Math.floor(Math.random() * 60),
+        slowTimer: 0,
+        alive: true,
+      };
+      this.enemies.push(minion);
+      this.particleEngine.emit('spark', minion.x, minion.y, { count: 8, speed: 3, size: 2, color: '#ff0000' });
+    }
+    this.particleEngine.emit('explosion', boss.x, boss.y, { count: 15, speed: 4, size: 4, color: '#ff3300' });
+  }
+
+  /**
+   * Finalboss defeated — victory sequence.
+   */
+  _onFinalbossDefeat() {
+    this.gameState = 'victory';
+    this.waveActive = false;
+    this.spawnTimer = 0;
+    this.audioEngine.stopBGM();
+    this.audioEngine.playVictory();
+    // Play "台湾解放" speech
+    this._playVictorySpeech();
+    this._showOverlay('🎉 台湾解放！', '最终Boss已被击败！祖国统一！\n得分：' + this.score, '返回主菜单');
+    this._updateHUD();
+  }
+
+  /**
+   * Play "台湾解放" victory speech using Web Speech API.
+   */
+  _playVictorySpeech() {
+    try {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance('台湾解放');
+        utterance.lang = 'zh-CN';
+        utterance.rate = 0.7;
+        utterance.pitch = 1.3;
+        utterance.volume = 1;
+        window.speechSynthesis.speak(utterance);
+      }
+    } catch (e) {
+      // Silently fail — speech is a nice-to-have
     }
   }
 
@@ -2054,6 +2166,87 @@ class TowerDefenseGame {
         ctx.lineTo(8, -32 + bob);
         ctx.lineTo(3, -26 + bob);
         ctx.fill();
+        break;
+      }
+      case 'finalboss': {
+        // Mega red demon frog (1.5x boss) with pulsing halo
+        const bob = Math.sin(frame * 0.25) * 3;
+        const haloPulse = 1 + Math.sin(enemy.frameCounter * 0.08) * 0.25;
+
+        // Aura halo — breathing pulse
+        ctx.strokeStyle = 'rgba(255,30,30,0.35)';
+        ctx.lineWidth = 3 * haloPulse;
+        ctx.beginPath();
+        ctx.arc(0, 0, 32 * haloPulse, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,100,30,0.20)';
+        ctx.lineWidth = 5 * haloPulse;
+        ctx.beginPath();
+        ctx.arc(0, 0, 40 * haloPulse, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Giant body
+        ctx.fillStyle = '#8b0000';
+        ctx.fillRect(-24, -18 + bob, 48, 36);
+        ctx.fillStyle = '#cc1100';
+        ctx.beginPath();
+        ctx.ellipse(0, -12 + bob, 22, 18, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Armor plates
+        ctx.fillStyle = '#660000';
+        ctx.beginPath();
+        ctx.ellipse(0, -18 + bob, 18, 9, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Giant head
+        ctx.fillStyle = '#dd2200';
+        ctx.beginPath();
+        ctx.ellipse(0, -28 + bob, 18, 15, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Glowing demon eyes
+        ctx.fillStyle = '#ffff00';
+        ctx.beginPath();
+        ctx.arc(-7, -31 + bob, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(7, -31 + bob, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ff0000';
+        ctx.beginPath();
+        ctx.arc(-7, -31 + bob, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(7, -31 + bob, 4, 0, Math.PI * 2);
+        ctx.fill();
+        // Fierce mouth
+        ctx.fillStyle = '#330000';
+        ctx.beginPath();
+        ctx.ellipse(0, -21 + bob, 12, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        for (let t = -4; t <= 4; t++) {
+          ctx.fillRect(t * 3 - 2, -22.5 + bob, 4, 3);
+        }
+        // Large horns
+        ctx.fillStyle = '#4a0000';
+        ctx.beginPath();
+        ctx.moveTo(-8, -40 + bob);
+        ctx.lineTo(-12, -52 + bob);
+        ctx.lineTo(-4, -40 + bob);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(8, -40 + bob);
+        ctx.lineTo(12, -52 + bob);
+        ctx.lineTo(4, -40 + bob);
+        ctx.fill();
+        // Spinal spikes
+        ctx.fillStyle = '#330000';
+        for (let s = -5; s <= 5; s++) {
+          ctx.beginPath();
+          ctx.moveTo(s * 4 - 2, -3 + bob);
+          ctx.lineTo(s * 4, -10 + bob + (s % 2) * 4);
+          ctx.lineTo(s * 4 + 2, -3 + bob);
+          ctx.fill();
+        }
         break;
       }
       case 'healer': {
