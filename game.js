@@ -1353,6 +1353,7 @@ class TowerDefenseGame {
 
   _onLevelComplete() {
     this.gameState = 'victory';
+    this.projectiles = [];
     this.audioEngine.stopBGM();
     this.audioEngine.playVictory();
     if (this.levelConfig && this.levelConfig.id < 5) {
@@ -1534,6 +1535,7 @@ class TowerDefenseGame {
           if (this.health <= 0) {
             this.health = 0;
             this.gameState = 'defeat';
+            this.projectiles = [];
             this.audioEngine.stopBGM();
             this.audioEngine.playDefeat();
             this._showOverlay('阵地失守', '绿娃已突破防线！重新集结部队再战！');
@@ -1631,6 +1633,8 @@ class TowerDefenseGame {
       piercing: cfg.piercing || false,
       hitEnemies: [],
       towerRef: tower,
+      lifetime: 300,       // max 300 frames (5s @ 60fps) before auto-removal
+      maxLifetime: 300,
     };
     // Set initial velocity toward target
     const dx = target.x - p.x;
@@ -1664,6 +1668,13 @@ class TowerDefenseGame {
       }
       p.x += p.vx * dtFactor;
       p.y += p.vy * dtFactor;
+
+      // Lifetime expiration: auto-remove projectiles that live too long
+      p.lifetime -= dtFactor;
+      if (p.lifetime <= 0) {
+        toRemove.push(i);
+        continue;
+      }
 
       // Check bounds
       if (p.x < -20 || p.x > this.width + 20 || p.y < -20 || p.y > this.height + 20) {
@@ -1853,6 +1864,7 @@ class TowerDefenseGame {
     this.gameState = 'victory';
     this.waveActive = false;
     this.spawnTimer = 0;
+    this.projectiles = [];
     this.audioEngine.stopBGM();
     this.audioEngine.playVictory();
     // Play "台湾解放" speech
@@ -2642,7 +2654,13 @@ class TowerDefenseGame {
    */
   _renderProjectiles(ctx) {
     for (const p of this.projectiles) {
+      // Fade out when near lifetime end (last 60 frames)
+      const fadeAlpha = (p.maxLifetime && p.maxLifetime > 0)
+        ? Math.min(1, p.lifetime / 60)
+        : 1;
+      if (fadeAlpha <= 0) continue;
       ctx.save();
+      ctx.globalAlpha = fadeAlpha;
       ctx.fillStyle = p.color;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
